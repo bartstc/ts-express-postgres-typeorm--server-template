@@ -6,12 +6,12 @@ import { Request } from 'express';
 import { User } from './user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { LoginUserDTO } from './dto/login-user.dto';
-import { DataStoredInToken } from '../../types/dataStoredInToken.interface';
-import { TokenData } from '../../types/tokenData.interface';
-import { EmailOrUsernameInUseException } from '../../exceptions/EmailOrUsernameInUseException';
-import { WrongCredentialsException } from '../../exceptions/WrongCredentialException';
-import { HttpException } from '../../exceptions/HttpException';
-import { UserNotFoundException } from '../../exceptions/UserNotFoundException';
+import { DataStoredInToken } from '../../types/data-stored-in-token.interface';
+import { TokenData } from '../../types/token-data.interface';
+import { EmailOrUsernameInUseException } from '../../exceptions/email-or-username-in-use-exception';
+import { WrongCredentialsException } from '../../exceptions/wrong-credentials-exception';
+import { HttpException } from '../../exceptions/http-exception';
+import { UserNotFoundException } from '../../exceptions/user-not-found-exception';
 
 export class AuthService {
   private userRepository = getRepository(User);

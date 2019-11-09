@@ -3,13 +3,13 @@ import { Response, Request, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
 import { User } from '../modules/auth/user.entity';
-import { DataStoredInToken } from '../types/dataStoredInToken.interface';
-import { WrongAuthenticationTokenException } from '../exceptions/WrongAuthenticationTokenException';
-import { AuthenticationTokenMissingException } from '../exceptions/AuthenticationTokenMissingException';
+import { DataStoredInToken } from '../types/data-stored-in-token.interface';
+import { WrongAuthenticationTokenException } from '../exceptions/wrong-authentication-token-exception';
+import { AuthenticationTokenMissingException } from '../exceptions/authentication-token-missing-exception';
 
 export const authMiddleware = async (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction
 ) => {
   const userRepository = getRepository(User);
