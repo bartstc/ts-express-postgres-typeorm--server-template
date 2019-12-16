@@ -1,11 +1,13 @@
-import jwt from 'jsonwebtoken';
-import { Response, Request, NextFunction } from 'express';
-import { getRepository } from 'typeorm';
+import jwt from "jsonwebtoken";
+import { Response, Request, NextFunction } from "express";
+import { getRepository } from "typeorm";
 
-import { User } from '../modules/auth/user.entity';
-import { DataStoredInToken } from '../types/data-stored-in-token.interface';
-import { WrongAuthenticationTokenException } from '../exceptions/wrong-authentication-token-exception';
-import { AuthenticationTokenMissingException } from '../exceptions/authentication-token-missing-exception';
+import { User } from "modules/auth/user.entity";
+
+import { DataStoredInToken } from "types/data-stored-in-token.interface";
+
+import { WrongAuthenticationTokenException } from "exceptions/wrong-authentication-token-exception";
+import { AuthenticationTokenMissingException } from "exceptions/authentication-token-missing-exception";
 
 export const authMiddleware = async (
   req: Request,
@@ -13,7 +15,7 @@ export const authMiddleware = async (
   next: NextFunction
 ) => {
   const userRepository = getRepository(User);
-  const token = req.header('x-auth-token');
+  const token = req.header("x-auth-token");
 
   if (token) {
     try {

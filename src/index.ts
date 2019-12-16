@@ -1,12 +1,14 @@
-import 'dotenv/config';
-import 'reflect-metadata';
-import { createConnection } from 'typeorm';
+import "dotenv/config";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 
-import { config } from './ormconfig';
-import { validateEnv } from './utils/validate-env';
-import { App } from './app';
-import { User } from './modules/auth/user.entity';
-import { AuthController } from './modules/auth/auth.controller';
+import { User } from "modules/auth/user.entity";
+import { AuthController } from "modules/auth/auth.controller";
+
+import { validateEnv } from "utils/validate-env";
+
+import { config } from "ormconfig";
+import { App } from "app";
 
 // expand Request interface with a new property: user: User
 declare global {
@@ -25,7 +27,7 @@ validateEnv();
     connection.runMigrations();
     console.log(`Is connected: ${connection.isConnected}`);
   } catch (err) {
-    console.log('Error while connecting to the database', err);
+    console.log("Error while connecting to the database", err);
     return err;
   }
 

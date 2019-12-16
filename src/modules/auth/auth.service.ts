@@ -1,17 +1,20 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
-import { Request } from 'express';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { getRepository } from "typeorm";
+import { Request } from "express";
 
-import { User } from './user.entity';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { LoginUserDTO } from './dto/login-user.dto';
-import { DataStoredInToken } from '../../types/data-stored-in-token.interface';
-import { TokenData } from '../../types/token-data.interface';
-import { EmailOrUsernameInUseException } from '../../exceptions/email-or-username-in-use-exception';
-import { WrongCredentialsException } from '../../exceptions/wrong-credentials-exception';
-import { HttpException } from '../../exceptions/http-exception';
-import { UserNotFoundException } from '../../exceptions/user-not-found-exception';
+import { DataStoredInToken } from "types/data-stored-in-token.interface";
+import { TokenData } from "types/token-data.interface";
+
+import { EmailOrUsernameInUseException } from "exceptions/email-or-username-in-use-exception";
+import { WrongCredentialsException } from "exceptions/wrong-credentials-exception";
+import { UserNotFoundException } from "exceptions/user-not-found-exception";
+import { HttpException } from "exceptions/http-exception";
+
+import { User } from "./user.entity";
+
+import { CreateUserDTO } from "./dto/create-user.dto";
+import { LoginUserDTO } from "./dto/login-user.dto";
 
 export class AuthService {
   private userRepository = getRepository(User);
@@ -19,7 +22,7 @@ export class AuthService {
   signUp = async (userData: CreateUserDTO) => {
     const existingUser = await this.userRepository
       .createQueryBuilder()
-      .where('username = :username OR email = :email', {
+      .where("username = :username OR email = :email", {
         username: userData.username,
         email: userData.email
       })
@@ -37,6 +40,7 @@ export class AuthService {
     const user = { id: savedUser.id, username: savedUser.username };
 
     const { token } = this.createToken(savedUser);
+
     return { token, ...user };
   };
 
@@ -44,15 +48,18 @@ export class AuthService {
     const existingUser = await this.userRepository.findOne({
       email: loginData.email
     });
+
     if (existingUser) {
       const isMatch = await bcrypt.compare(
         loginData.password,
         existingUser.password
       );
+
       if (isMatch) {
         const user = { id: existingUser.id, username: existingUser.username };
 
         const { token } = this.createToken(existingUser);
+
         return { token, ...user };
       } else {
         throw new WrongCredentialsException();
@@ -66,6 +73,7 @@ export class AuthService {
     const user: User = req.user;
 
     const deletedUser = await this.userRepository.delete({ id: user.id });
+
     if (deletedUser.affected === 0) throw new UserNotFoundException(user.id);
   };
 
@@ -78,7 +86,8 @@ export class AuthService {
 
     if (secret) {
       const token = jwt.sign(dataStoredInToken, secret, { expiresIn });
+
       return { token };
-    } else throw new HttpException(500, 'Something goes wrong');
+    } else throw new HttpException(500, "Something goes wrong");
   };
 }

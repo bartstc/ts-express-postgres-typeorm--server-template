@@ -1,10 +1,11 @@
-import bodyParser from 'body-parser';
-import express, { Application, Request, Response } from 'express';
-import helmet from 'helmet';
-import path from 'path';
+import bodyParser from "body-parser";
+import express, { Application, Request, Response } from "express";
+import helmet from "helmet";
+import path from "path";
 
-import { errorMiddleware } from './middlewares/error.middleware';
-import { Controller } from './types/controller.interface';
+import { errorMiddleware } from "middlewares/error.middleware";
+
+import { Controller } from "types/controller.interface";
 
 const port = process.env.PORT || 5000;
 
@@ -41,12 +42,12 @@ export class App {
   }
 
   private handleProductionMode(): void {
-    if (process.env.NODE_ENV === 'production') {
-      this.app.use(express.static('client/build'));
+    if (process.env.NODE_ENV === "production") {
+      this.app.use(express.static("client/build"));
 
-      this.app.get('*', (req: Request, res: Response) => {
+      this.app.get("*", (_: Request, res: Response) => {
         res.sendFile(
-          path.resolve(__dirname, '../client', 'build', 'index.html')
+          path.resolve(__dirname, "../client", "build", "index.html")
         );
       });
     }
@@ -54,7 +55,7 @@ export class App {
 
   private initializeControllers(controllers: Controller[]): void {
     controllers.forEach(controller => {
-      this.app.use('/', controller.router);
+      this.app.use("/", controller.router);
     });
   }
 }

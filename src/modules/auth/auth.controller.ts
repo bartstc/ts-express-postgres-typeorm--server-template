@@ -1,15 +1,19 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction } from "express";
 
-import { AuthService } from './auth.service';
-import { LoginUserDTO } from './dto/login-user.dto';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { User } from './user.entity';
-import { Controller } from '../../types/controller.interface';
-import { validationMiddleware } from '../../middlewares/validation.middleware';
-import { authMiddleware } from '../../middlewares/auth.middleware';
+import { validationMiddleware } from "middlewares/validation.middleware";
+import { authMiddleware } from "middlewares/auth.middleware";
+
+import { Controller } from "types/controller.interface";
+
+import { AuthService } from "./auth.service";
+
+import { User } from "./user.entity";
+
+import { LoginUserDTO } from "./dto/login-user.dto";
+import { CreateUserDTO } from "./dto/create-user.dto";
 
 export class AuthController implements Controller {
-  public path = '/auth';
+  public path = "/auth";
   public router = express.Router();
   private authService = new AuthService();
 
