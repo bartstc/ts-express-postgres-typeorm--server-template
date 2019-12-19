@@ -1,29 +1,27 @@
-import bodyParser from "body-parser";
 import express, { Application, Request, Response } from "express";
-import helmet from "helmet";
 import path from "path";
 
-import { errorMiddleware } from "middlewares/error.middleware";
+import { errorMiddleware } from "@middlewares/error.middleware";
 
-import { Controller } from "types/controller.interface";
+import { Controller } from "@global-types/controller.interface";
 
-const port = process.env.PORT || 5000;
+class App {
+  public app: Application;
+  public port: number;
 
-export class App {
-  private app: Application;
-
-  constructor(controllers: Controller[]) {
+  constructor(port: number, middleWares: any, controllers: Controller[]) {
     this.app = express();
+    this.port = port;
 
-    this.initializeMiddlewares();
+    this.initializeMiddleWares(middleWares);
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
     this.handleProductionMode();
   }
 
   public listen(): void {
-    this.app.listen(port, () => {
-      console.log(`App listening on port ${port}`);
+    this.app.listen(this.port, () => {
+      console.log(`App listening on port ${this.port}`);
     });
   }
 
@@ -31,10 +29,10 @@ export class App {
     return this.app;
   }
 
-  private initializeMiddlewares(): void {
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use(helmet());
+  private initializeMiddleWares(middleWares: any): void {
+    middleWares.forEach((middleware: any) => {
+      this.app.use(middleware);
+    });
   }
 
   private initializeErrorHandling(): void {
@@ -59,3 +57,5 @@ export class App {
     });
   }
 }
+
+export { App };

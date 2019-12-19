@@ -15,27 +15,43 @@
   "author": "Bart",
   "license": "ISC",
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.10.0",
+    "class-validator": "^0.10.2",
     "concurrently": "^4.1.2",
-    "dotenv": "^8.1.0",
+    "dotenv": "^8.2.0",
     "envalid": "^5.0.0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "express": "^4.17.1",
-    "helmet": "^3.20.0",
+    "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^7.12.1",
+    "module-alias": "^2.2.2",
+    "node": "^10.18.0",
+    "nodejs": "0.0.0",
+    "pg": "^7.15.1",
+    "prettier": "^1.19.1",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.21"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
-    "@types/express": "^4.17.1",
+    "@types/express": "^4.17.2",
     "@types/helmet": "0.0.44",
-    "@types/jsonwebtoken": "^8.3.3",
-    "@types/node": "^12.7.2",
+    "@types/jsonwebtoken": "^8.3.5",
+    "@types/node": "^12.12.21",
     "rimraf": "^3.0.0",
     "typescript": "^3.7"
+  },
+  "_moduleAliases": {
+    "@exceptions": "build/exceptions",
+    "@middlewares": "build/middlewares",
+    "@modules": "build/modules",
+    "@global-types": "build/global-types",
+    "@utils": "build/utils"
   }
 }

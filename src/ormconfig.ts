@@ -1,8 +1,9 @@
 import { ConnectionOptions } from "typeorm";
 
-import { User } from "modules/auth/user.entity";
+import { User } from "@modules/auth/user.entity";
 
 const developmentConfig: ConnectionOptions = {
+  name: "default",
   type: "postgres",
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),
@@ -21,6 +22,7 @@ const productionConfig: ConnectionOptions = {
   entities: [User],
   synchronize: false
 };
-
-export const config =
+const config =
   process.env.NODE_ENV === "production" ? productionConfig : developmentConfig;
+
+export { config };

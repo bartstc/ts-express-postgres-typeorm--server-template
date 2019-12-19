@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import { Request } from "express";
 
-import { DataStoredInToken } from "types/data-stored-in-token.interface";
-import { TokenData } from "types/token-data.interface";
+import { DataStoredInToken } from "@global-types/data-stored-in-token.interface";
+import { TokenData } from "@global-types/token-data.interface";
 
-import { EmailOrUsernameInUseException } from "exceptions/email-or-username-in-use-exception";
-import { WrongCredentialsException } from "exceptions/wrong-credentials-exception";
-import { UserNotFoundException } from "exceptions/user-not-found-exception";
-import { HttpException } from "exceptions/http-exception";
+import { EmailOrUsernameInUseException } from "@exceptions/email-or-username-in-use-exception";
+import { WrongCredentialsException } from "@exceptions/wrong-credentials-exception";
+import { UserNotFoundException } from "@exceptions/user-not-found-exception";
+import { HttpException } from "@exceptions/http-exception";
 
 import { User } from "./user.entity";
 
@@ -70,11 +70,11 @@ export class AuthService {
   };
 
   deleteAccount = async (req: Request) => {
-    const user: User = req.user;
+    const { id } = req.user;
 
-    const deletedUser = await this.userRepository.delete({ id: user.id });
+    const deletedUser = await this.userRepository.delete({ id });
 
-    if (deletedUser.affected === 0) throw new UserNotFoundException(user.id);
+    if (deletedUser.affected === 0) throw new UserNotFoundException(id);
   };
 
   createToken = (user: User): TokenData => {

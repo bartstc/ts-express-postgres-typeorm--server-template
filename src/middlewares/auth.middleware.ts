@@ -2,12 +2,12 @@ import jwt from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
 import { getRepository } from "typeorm";
 
-import { User } from "modules/auth/user.entity";
+import { User } from "@modules/auth/user.entity";
 
-import { DataStoredInToken } from "types/data-stored-in-token.interface";
+import { DataStoredInToken } from "@global-types/data-stored-in-token.interface";
 
-import { WrongAuthenticationTokenException } from "exceptions/wrong-authentication-token-exception";
-import { AuthenticationTokenMissingException } from "exceptions/authentication-token-missing-exception";
+import { WrongAuthenticationTokenException } from "@exceptions/wrong-authentication-token-exception";
+import { AuthenticationTokenMissingException } from "@exceptions/authentication-token-missing-exception";
 
 export const authMiddleware = async (
   req: Request,
@@ -34,5 +34,7 @@ export const authMiddleware = async (
     } catch (e) {
       next(new WrongAuthenticationTokenException());
     }
-  } else next(new AuthenticationTokenMissingException());
+  } else {
+    next(new AuthenticationTokenMissingException());
+  }
 };
