@@ -11,10 +11,9 @@ import { WrongCredentialsException } from "@exceptions/wrong-credentials-excepti
 import { UserNotFoundException } from "@exceptions/user-not-found-exception";
 import { HttpException } from "@exceptions/http-exception";
 
-import { User } from "./user.entity";
-
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { LoginUserDTO } from "./dto/login-user.dto";
+import { User } from "./user.entity";
 
 export class AuthService {
   private userRepository = getRepository(User);
@@ -26,22 +25,15 @@ export class AuthService {
         username: userData.username,
         email: userData.email
       })
-      .getMany();
+      .getOne();
 
-    if (existingUser.length !== 0) throw new EmailOrUsernameInUseException();
+    if (existingUser) throw new EmailOrUsernameInUseException();
 
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const newUser = this.userRepository.create({
-      ...userData,
-      password: hashedPassword
-    });
+    const newUser = await this.userRepository.create(userData).save();
 
-    const savedUser = await this.userRepository.save(newUser);
-    const user = { id: savedUser.id, username: savedUser.username };
+    const { token } = this.createToken(newUser);
 
-    const { token } = this.createToken(savedUser);
-
-    return { token, ...user };
+    return { token, id: newUser.id, username: newUser.username };
   };
 
   signIn = async (loginData: LoginUserDTO) => {
@@ -49,24 +41,24 @@ export class AuthService {
       email: loginData.email
     });
 
-    if (existingUser) {
-      const isMatch = await bcrypt.compare(
-        loginData.password,
-        existingUser.password
-      );
-
-      if (isMatch) {
-        const user = { id: existingUser.id, username: existingUser.username };
-
-        const { token } = this.createToken(existingUser);
-
-        return { token, ...user };
-      } else {
-        throw new WrongCredentialsException();
-      }
-    } else {
+    if (!existingUser) {
       throw new WrongCredentialsException();
     }
+
+    const isMatch = await bcrypt.compare(
+      loginData.password,
+      existingUser.password
+    );
+
+    if (!isMatch) {
+      throw new WrongCredentialsException();
+    }
+
+    const user = { id: existingUser.id, username: existingUser.username };
+
+    const { token } = this.createToken(existingUser);
+
+    return { token, ...user };
   };
 
   deleteAccount = async (req: Request) => {
@@ -84,10 +76,12 @@ export class AuthService {
       id: user.id
     };
 
-    if (secret) {
-      const token = jwt.sign(dataStoredInToken, secret, { expiresIn });
+    if (!secret) {
+      throw new HttpException(500, "Something goes wrong");
+    }
 
-      return { token };
-    } else throw new HttpException(500, "Something goes wrong");
+    const token = jwt.sign(dataStoredInToken, secret, { expiresIn });
+
+    return { token };
   };
 }

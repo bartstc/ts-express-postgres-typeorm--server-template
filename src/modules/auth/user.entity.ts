@@ -1,13 +1,15 @@
+import bcrypt from "bcryptjs";
 import {
   BaseEntity,
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Unique
-} from 'typeorm';
+  Unique,
+  BeforeInsert
+} from "typeorm";
 
 @Entity()
-@Unique(['username'])
+@Unique(["username"])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -20,4 +22,9 @@ export class User extends BaseEntity {
 
   @Column()
   password!: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }

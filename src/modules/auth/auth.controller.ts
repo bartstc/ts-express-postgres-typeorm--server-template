@@ -6,10 +6,9 @@ import { authMiddleware } from "@middlewares/auth.middleware";
 import { Controller } from "@global-types/controller.interface";
 import { RequestHandler } from "@global-types/request-handler";
 
-import { AuthService } from "./auth.service";
-
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { LoginUserDTO } from "./dto/login-user.dto";
+import { AuthService } from "./auth.service";
 
 export class AuthController implements Controller {
   public path = "/auth";
