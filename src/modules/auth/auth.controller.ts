@@ -3,8 +3,8 @@ import express from "express";
 import { validationMiddleware } from "@middlewares/validation.middleware";
 import { authMiddleware } from "@middlewares/auth.middleware";
 
-import { Controller } from "@global-types/controller.interface";
 import { RequestHandler } from "@global-types/request-handler";
+import { Controller } from "@global-types/controller";
 
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { LoginUserDTO } from "./dto/login-user.dto";
@@ -59,7 +59,7 @@ export class AuthController implements Controller {
 
   private deleteAccount: RequestHandler = async (req, res, next) => {
     try {
-      await this.authService.deleteAccount(req);
+      await this.authService.deleteAccount(req.user.id);
       res.status(200).json({ success: true });
     } catch (err) {
       next(err);

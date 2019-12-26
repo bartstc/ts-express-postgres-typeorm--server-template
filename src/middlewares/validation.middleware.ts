@@ -2,6 +2,7 @@ import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 
 import { HttpException } from "@exceptions/http-exception";
+
 import { RequestHandler } from "@global-types/request-handler";
 
 export const validationMiddleware = (

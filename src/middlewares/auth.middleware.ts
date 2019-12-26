@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 
 import { User } from "@modules/auth/user.entity";
 
-import { DataStoredInToken } from "@global-types/data-stored-in-token.interface";
+import { DataStoredInToken } from "@global-types/data-stored-in-token";
 
 import { WrongAuthenticationTokenException } from "@exceptions/wrong-authentication-token-exception";
 import { AuthenticationTokenMissingException } from "@exceptions/authentication-token-missing-exception";

@@ -3,7 +3,7 @@ import path from "path";
 
 import { errorMiddleware } from "@middlewares/error.middleware";
 
-import { Controller } from "global-types/controller.interface";
+import { Controller } from "@global-types/controller";
 
 class App {
   public app: Application;

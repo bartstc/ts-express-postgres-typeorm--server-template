@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
-import { Request } from "express";
 
-import { DataStoredInToken } from "@global-types/data-stored-in-token.interface";
-import { TokenData } from "@global-types/token-data.interface";
+import { DataStoredInToken } from "@global-types/data-stored-in-token";
+import { TokenData } from "@global-types/token-data";
+import { UserData } from "@global-types/user-data";
 
 import { EmailOrUsernameInUseException } from "@exceptions/email-or-username-in-use-exception";
 import { WrongCredentialsException } from "@exceptions/wrong-credentials-exception";
@@ -18,7 +18,7 @@ import { User } from "./user.entity";
 export class AuthService {
   private userRepository = getRepository(User);
 
-  signUp = async (userData: CreateUserDTO) => {
+  signUp = async (userData: CreateUserDTO): Promise<Partial<UserData>> => {
     const existingUser = await this.userRepository
       .createQueryBuilder()
       .where("username = :username OR email = :email", {
@@ -36,7 +36,7 @@ export class AuthService {
     return { token, id: newUser.id, username: newUser.username };
   };
 
-  signIn = async (loginData: LoginUserDTO) => {
+  signIn = async (loginData: LoginUserDTO): Promise<Partial<UserData>> => {
     const existingUser = await this.userRepository.findOne({
       email: loginData.email
     });
@@ -61,12 +61,10 @@ export class AuthService {
     return { token, ...user };
   };
 
-  deleteAccount = async (req: Request) => {
-    const { id } = req.user;
+  deleteAccount = async (userId: number): Promise<void> => {
+    const deletedUser = await this.userRepository.delete({ id: userId });
 
-    const deletedUser = await this.userRepository.delete({ id });
-
-    if (deletedUser.affected === 0) throw new UserNotFoundException(id);
+    if (deletedUser.affected === 0) throw new UserNotFoundException(userId);
   };
 
   createToken = (user: User): TokenData => {
