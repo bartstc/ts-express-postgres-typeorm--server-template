@@ -28,6 +28,7 @@ declare global {
 }
 
 validateEnv();
+
 const port = process.env.PORT || 5000;
 
 const conn = async () => {
@@ -45,9 +46,11 @@ const conn = async () => {
     [bodyParser.json(), bodyParser.urlencoded({ extended: true }), helmet()],
     [new AuthController()]
   );
+
   app.listen();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 conn();
 
 // HEROKU DEPLOYMENT

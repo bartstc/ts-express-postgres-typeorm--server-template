@@ -1,10 +1,11 @@
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
-import { RequestHandler } from "express";
 
 import { HttpException } from "@exceptions/http-exception";
+import { RequestHandler } from "@global-types/request-handler";
 
 export const validationMiddleware = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type: any,
   skipMissingProperties = false
 ): RequestHandler => {

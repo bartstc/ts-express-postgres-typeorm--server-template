@@ -1,14 +1,15 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 
 import { validationMiddleware } from "@middlewares/validation.middleware";
 import { authMiddleware } from "@middlewares/auth.middleware";
 
 import { Controller } from "@global-types/controller.interface";
+import { RequestHandler } from "@global-types/request-handler";
 
 import { AuthService } from "./auth.service";
 
-import { LoginUserDTO } from "./dto/login-user.dto";
 import { CreateUserDTO } from "./dto/create-user.dto";
+import { LoginUserDTO } from "./dto/login-user.dto";
 
 export class AuthController implements Controller {
   public path = "/auth";
@@ -35,11 +36,7 @@ export class AuthController implements Controller {
       .get(this.path, authMiddleware, this.getCurrentUser);
   };
 
-  private signUp = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  private signUp: RequestHandler = async (req, res, next) => {
     const userData: CreateUserDTO = req.body;
 
     try {
@@ -50,11 +47,7 @@ export class AuthController implements Controller {
     }
   };
 
-  private signIn = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  private signIn: RequestHandler = async (req, res, next) => {
     const loginData: LoginUserDTO = req.body;
 
     try {
@@ -65,11 +58,7 @@ export class AuthController implements Controller {
     }
   };
 
-  private deleteAccount = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  private deleteAccount: RequestHandler = async (req, res, next) => {
     try {
       await this.authService.deleteAccount(req);
       res.status(200).json({ success: true });
@@ -78,11 +67,12 @@ export class AuthController implements Controller {
     }
   };
 
-  private getCurrentUser = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    const { id, username } = req.user;
-    res.status(200).json({ id, username });
+  private getCurrentUser: RequestHandler = async (req, res, next) => {
+    try {
+      const { id, username } = req.user;
+      res.status(200).json({ id, username });
+    } catch (err) {
+      next(err);
+    }
   };
 }

@@ -1,15 +1,19 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, RequestHandler } from "express";
 import path from "path";
 
 import { errorMiddleware } from "@middlewares/error.middleware";
 
-import { Controller } from "@global-types/controller.interface";
+import { Controller } from "global-types/controller.interface";
 
 class App {
   public app: Application;
   public port: number;
 
-  constructor(port: number, middleWares: any, controllers: Controller[]) {
+  constructor(
+    port: number,
+    middleWares: RequestHandler[],
+    controllers: Controller[]
+  ) {
     this.app = express();
     this.port = port;
 
@@ -29,8 +33,8 @@ class App {
     return this.app;
   }
 
-  private initializeMiddleWares(middleWares: any): void {
-    middleWares.forEach((middleware: any) => {
+  private initializeMiddleWares(middleWares: RequestHandler[]): void {
+    middleWares.forEach(middleware => {
       this.app.use(middleware);
     });
   }
@@ -43,7 +47,7 @@ class App {
     if (process.env.NODE_ENV === "production") {
       this.app.use(express.static("client/build"));
 
-      this.app.get("*", (_: Request, res: Response) => {
+      this.app.get("*", (_, res) => {
         res.sendFile(
           path.resolve(__dirname, "../client", "build", "index.html")
         );
