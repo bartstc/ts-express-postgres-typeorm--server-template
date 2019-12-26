@@ -61,7 +61,7 @@ export class AuthService {
     return { token, ...user };
   };
 
-  deleteAccount = async (userId: number): Promise<void> => {
+  deleteAccount = async (userId: string): Promise<void> => {
     const deletedUser = await this.userRepository.delete({ id: userId });
 
     if (deletedUser.affected === 0) throw new UserNotFoundException(userId);
